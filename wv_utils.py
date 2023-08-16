@@ -42,7 +42,7 @@ def create_angle_matrix(wv):
             # if pitch == UNK_TAG:
             #     continue
 
-            angle = round(angle_between(wv[current], wv[pitch]), 2)
+            angle = round(angle_between(wv[current], wv[pitch]), 1)
             angles_dict[current][pitch] = angle
 
     return angles_dict
