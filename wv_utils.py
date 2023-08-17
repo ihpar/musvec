@@ -1,3 +1,4 @@
+from gensim.models.callbacks import CallbackAny2Vec
 from sklearn.manifold import TSNE
 import numpy as np
 import warnings
@@ -46,3 +47,24 @@ def create_angle_matrix(wv):
             angles_dict[current][pitch] = angle
 
     return angles_dict
+
+
+class callback(CallbackAny2Vec):
+    '''
+    Callback to print loss after each epoch.
+    from https://stackoverflow.com/questions/54888490/gensim-word2vec-print-log-loss
+    '''
+
+    def __init__(self):
+        self.epoch = 0
+        self.loss_to_be_subed = 0
+        self.loss_history = []
+
+    def on_epoch_end(self, model):
+        loss = model.get_latest_training_loss()
+        loss_now = loss - self.loss_to_be_subed
+        self.loss_to_be_subed = loss
+        if self.epoch % 20 == 0:
+            print(f"Epoch {self.epoch}, Loss: {loss_now}")
+        self.epoch += 1
+        self.loss_history.append(loss_now)
